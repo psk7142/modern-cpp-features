@@ -2,7 +2,7 @@
 
 ## Overview
 
-C++11은 아래와 같은 새로운 언어 기능이 포함됩니다:
+C++11은 아래와 같은 새로운 언어 기능을 포함합니다.
 
 - [move semantics - 이동 semantic](#move-semantics)
 - [variadic templates - 가변인자 템플릿](#variadic-templates)
@@ -93,7 +93,7 @@ int&& xr = x; // 컴파일 에러 -- `x`는 lvalue
 int&& xr2 = 0; // `xr2`는 `int&&` 타입의 lvalue -- 일시적으로 rvalue에 바인딩, `0`
 ```
 
-더 알아보기: [`std::move`](/modern-cpp-features-docs/cpp_11/Library/#stdmove), [`std::forward`](/modern-cpp-features-docs/cpp_11/Library/#stdforward), [`전달 레퍼런스`](/modern-cpp-features-docs/cpp_11/Library/#forwarding-references).
+더 알아보기: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`전달 레퍼런스`](#forwarding-references).
 
 ---
 
@@ -159,7 +159,7 @@ f(z); // f(int&& &) => f(int&)로 추론
 f(std::move(z)); // f(int&& &&) => f(int&&)로 추론
 ```
 
-더 알아보기: [`std::move`](/modern-cpp-features-docs/cpp_11/Library/#stdmove), [`std::forward`](/modern-cpp-features-docs/cpp_11/Library/#stdforward), [`rvalue 레퍼런스`](/modern-cpp-features-docs/cpp_11/Library/#rvalue-references).
+더 알아보기: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`rvalue 레퍼런스`](#rvalue-references).
 
 ---
 

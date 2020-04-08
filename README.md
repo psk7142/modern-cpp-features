@@ -165,4 +165,5 @@ Anthony Calandra - [Original Repository](https://github.com/AnthonyCalandra/mode
 ## License
 
 [Original Repository](https://github.com/AnthonyCalandra/modern-cpp-features) - MIT
-This Repository - MIT
+
+[This Repository](/LICENSE) - MIT

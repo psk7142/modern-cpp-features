@@ -210,6 +210,35 @@ See also: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`rvalue refer
 
 ### Variadic templates
 
+> 가변 인자 템플릿
+
+`...` 구문은 _매개 변수 팩(parameter pack)_ 을 만들거나 확장(expand, unpack)합니다. 템플릿 매개 변수 팩은 0개 이상의 템플릿 인수(비타입, 타입 또는 템플릿)를 허용하는 템플릿 매개 변수입니다. 하나 이상의 매개 변수 팩이 있는 템플릿을 _가변 인자 템플릿(variadic tempaltes)_ 이라고 합니다.
+
+```c++
+template <typename... T>
+struct arity {
+  constexpr static int value = sizeof...(T);
+};
+static_assert(arity<>::value == 0);
+static_assert(arity<char, short, int>::value == 3);
+```
+
+이것의 흥미로운 용도는 가변성 함수 인수를 반복하기 위해 매개 변수 팩에서 초기화자 목록(initializer list)을 작성하는 것입니다.
+
+```c++
+template <typename First, typename... Args>
+auto sum(const First first, const Args... args) -> decltype(first) {
+  const auto values = {first, args...};
+  return std::accumulate(values.begin(), values.end(), First{0});
+}
+
+sum(1, 2, 3, 4, 5); // 15
+sum(1, 2, 3);       // 6
+sum(1.5, 2.0, 3.7); // 7.2
+```
+
+---
+
 The `...` syntax creates a _parameter pack_ or expands one. A template _parameter pack_ is a template parameter that accepts zero or more template arguments (non-types, types, or templates). A template with at least one parameter pack is called a _variadic template_.
 
 ```c++

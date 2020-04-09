@@ -1,11 +1,17 @@
 # Contributing
+
+> 기여 방법과 목표는 원본 저장소와 같습니다.
+
 Before I get started, thank you for contributing! :)
 
 ## Issues
+
 For any typos, errors, or new feature suggestions feel free to open a new issue.
 
 ## Pull Requests
+
 I'm not very picky about how you should contribute, but I ask that the following are met:
+
 * Proper spelling and grammar.
 * If it's a language or library feature that you can write code with, please provide an
 example of its usage. An optimal submission would also include a short real-world use case for the feature.
@@ -15,4 +21,5 @@ example of its usage. An optimal submission would also include a short real-worl
 * Keep additions/deletions of content consistent with the cheatsheet's goals.
 
 ## Goals
+
 My goal for this cheatsheet is to prefer conciseness over absolute completeness. Examples of features should be minimal: if an example is overly complicated, large, or is more of an obscure usage of the feature then it will most likely be rejected in review. The reason for this goal is to teach users what the most popular uses of these features will be, and for a more thorough investigation, to learn about those from external C++ resources.

@@ -266,6 +266,28 @@ sum(1.5, 2.0, 3.7); // 7.2
 
 ### Initializer lists
 
+> 초기화 목록(혹은 초기화자 목록)
+
+"괄호로 묶은 목록(`{ ... }`)" 구문을 사용하여 생성 된 간단한 배열 형 요소 컨테이너입니다. 예를 들어,`{1, 2, 3}`은 타입이 `std :: initializer_list <int>`인 정수 시퀀스를 생성합니다. 객체의 벡터를 함수에 전달하는 대체하기에 유용합니다.
+
+```c++
+int sum(const std::initializer_list<int>& list) {
+  int total = 0;
+  for (auto& e : list) {
+    total += e;
+  }
+
+  return total;
+}
+
+auto list = {1, 2, 3};
+sum(list); // == 6
+sum({1, 2, 3}); // == 6
+sum({}); // == 0
+```
+
+---
+
 A lightweight array-like container of elements created using a "braced list" syntax. For example, `{ 1, 2, 3 }` creates a sequences of integers, that has type `std::initializer_list<int>`. Useful as a replacement to passing a vector of objects to a function.
 
 ```c++
@@ -286,6 +308,18 @@ sum({}); // == 0
 
 ### Static assertions
 
+> 정적 어써트
+
+컴파일 타임에 계산되는 어써트입니다.
+
+```c++
+constexpr int x = 0;
+constexpr int y = 1;
+static_assert(x == y, "x != y");
+```
+
+---
+
 Assertions that are evaluated at compile-time.
 
 ```c++
@@ -295,6 +329,47 @@ static_assert(x == y, "x != y");
 ```
 
 ### auto
+
+`auto` 타입 변수는 초기화 타입에 따라 컴파일러가 추론합니다.
+
+```c++
+auto a = 3.14; // double
+auto b = 1; // int
+auto& c = b; // int&
+auto d = { 0 }; // std::initializer_list<int>
+auto&& e = 1; // int&&
+auto&& f = b; // int&
+auto g = new auto(123); // int*
+const auto h = 1; // const int
+auto i = 1, j = 2, k = 3; // int, int, int
+auto l = 1, m = true, n = 1.61; // 에러 -- `l`는 int로 추론하나, `m`이 bool임
+auto o; // 에러 -- `o`는 초기화가 필요함
+```
+
+가독성 개선(특히 복잡한 타입)에 매우 유용합니다.
+
+```c++
+std::vector<int> v = ...;
+std::vector<int>::const_iterator cit = v.cbegin();
+// vs.
+auto cit = v.cbegin();
+```
+
+함수는 `auto`를 사용하여 반환 타입을 추론할 수 있습니다. C++11에서는 반환 타입을 명시적으로 지정하거나 `decltype`을 아래와 같이 사용해야 합니다:
+
+```c++
+template <typename X, typename Y>
+auto add(X x, Y y) -> decltype(x + y) {
+  return x + y;
+}
+add(1, 2); // == 3
+add(1, 2.0); // == 3.0
+add(1.5, 1.5); // == 3.0
+```
+
+위 예제에서 추적한(trailing) 반환 타입은 `x + y` 표현식의 _선언된 타입(declared type)_ ([`decltype`](#decltype) 섹션 참조) 입니다. 예를 들어, `x`가 정수(int)고 `y`가 실수(double)면 `decltype(x + y)`는 실수(double)입니다. 따라서 위 함수는 `x + y` 표현식에서 산출하는 타입에 따라서 추론합니다. 추적한 반환 타입은해당 매개 변수에 접근(access)할 수 있으며, 적절한 경우 `this`입니다.
+
+---
 
 `auto`-typed variables are deduced by the compiler according to the type of their initializer.
 

@@ -25,7 +25,7 @@ C++11은 아래와 같은 새로운 언어 기능을 포함합니다.
 - [default functions - 기본 함수](#default-functions)
 - [deleted functions - 삭제 함수](#deleted-functions)
 - [range-based for loops - 범위 기반 for 문](#range-based-for-loops)
-- [special member functions for move semantics - 이동 semantic를 위한 특별한 멤버 함수들](#special-member-functions-for-move-semantics)
+- [special member functions for move semantics - 이동 semantic에 대한 특별한 멤버 함수들](#special-member-functions-for-move-semantics)
 - [converting constructors - 생성자 변환](#converting-constructors)
 - [explicit conversion functions - 명시적인 변환 함수](#explicit-conversion-functions)
 - [inline-namespaces](#inline-namespaces)
@@ -66,7 +66,7 @@ C++11은 아래와 같은 새로운 라이브러리 기능을 포함합니다:
 
 이동(move)은 `std::unique_ptr`([참조: 스마트 포인터](#smart-pointers))와 같이 복사할 수 없는 타입을 언어 수준에서 한 번에 하나의 리소스 인스턴스만 관리하고 범위(scope) 간에 인스턴스를 이전할 수 있음을 보장합니다.
 
-다음 부분을 참조하세요: [rvalue 레퍼런스](#rvalue-references), [이동 semantic를 위한 특별한 멤버 함수들](#special-member-functions-for-move-semantics), [`std::move`](#stdmove), [`std::forward`](#stdmove), [`전달 레퍼런스`](#forwarding-references).
+다음 부분을 참조하세요: [rvalue 레퍼런스](#rvalue-references), [이동 semantic에 대한 특별한 멤버 함수들](#special-member-functions-for-move-semantics), [`std::move`](#stdmove), [`std::forward`](#stdmove), [`전달 레퍼런스`](#forwarding-references).
 
 ---
 

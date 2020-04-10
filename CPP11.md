@@ -412,6 +412,51 @@ The trailing return type in the above example is the _declared type_ (see sectio
 
 ### Lambda expressions
 
+> 람다 표현식
+
+범위(scope) 내의 변수를 캡처할 수 있는 `람다`는 이름없는 함수 개체(object)입니다.
+
+특징:
+
+- _캡처 목록(capture list)_
+- 선택적인 추적 가능한 반환 타입이 있는 선택적 매개 변수 집합
+- 함수 몸체
+
+캡처 목록 예제:
+
+- `[]` - 아무것도 캡처하지 않음.
+- `[=]` - 값(by value)으로 범위 내의 지역 개체(지역 변수, 매개 변수)를 캡처합니다.
+- `[&]` - 참조(by reference)로 범위 내의 지역 개체(지역 변수, 매개 변수)를 캡처합니다.
+- `[this]` - 값으로 `this` 포인터를 캡처합니다.
+- `[a, &b]` - 개체 `a`는 값으로, `b`는 참조로 캡처합니다.
+
+```c++
+int x = 1;
+
+auto getX = [=] { return x; };
+getX(); // == 1
+
+auto addX = [=](int y) { return x + y; };
+addX(1); // == 2
+
+auto getXRef = [&]() -> int& { return x; };
+getXRef(); // int&에서 `x`로
+```
+
+ 기본적으로 값 캡처는 수정할 수 없습니다. 컴파일러가 생성한 메소드에 `const`로 지정되어 있기 때문입니다.  `mutable` 키워든 캡처한 변수들을 수정할 수 있게 해줍니다. 이 키워드는 매개 변수 목록 뒤에 위치해야 합니다.(목록이 비어있는 경우에도 존재해야 합니다)
+
+```c++
+int x = 1;
+
+auto f1 = [&x] { x = 2; }; // 좋아요: x는 참조이며 원본을 수정할 수 있습니다.
+
+auto f2 = [x] { x = 2; }; // 에러: 람다는 캡처한 값에 대해서만 const 연산을 수행할 수 있습니다.
+// vs.
+auto f3 = [x]() mutable { x = 2; }; // 좋아요: 람다는 캡처한 값에 대한 모든 작업을 수행할 수 있습니다.
+```
+
+---
+
 A `lambda` is an unnamed function object capable of capturing variables in scope. It features: a _capture list_; an optional set of parameters with an optional trailing return type; and a body. Examples of capture lists:
 
 - `[]` - captures nothing.
@@ -468,7 +513,7 @@ auto add(X x, Y y) -> decltype(x + y) {
 add(1, 2.0); // `decltype(x + y)` => `decltype(3.0)` => `double`
 ```
 
-See also: `decltype(auto)` (C++14).
+See also: [decltype(auto) - C++14](/CPP14.md#decltype(auto))
 
 ### Type aliases
 

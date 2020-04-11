@@ -492,6 +492,33 @@ auto f3 = [x]() mutable { x = 2; }; // OK: the lambda can perform any operations
 
 ### decltype
 
+`decltype`은 전달된 표현식의  _선언된 타입(declared type)_을 반환하는 연산자입니다. cv 한정자(cv-qualifiers, c: const, v: volatile) 및 참조는 식의 일부인 경우 유지됩니다.
+
+`decltype` 예시:
+
+```c++
+int a = 1; // `a`는 `int` 타입으로 선언됨
+decltype(a) b = a; // `decltype(a)`는 `int`
+const int& c = a; // `c`는 `const int&` 타입으로 선언됨
+decltype(c) d = a; // `decltype(c)`는 `const int&`
+decltype(123) e = 123; // `decltype(123)`는 `int`
+int&& f = 1; // `f`는 `int&&` 타입으로 선언됨
+decltype(f) g = 1; // `decltype(f)`는 `int&&`
+decltype((a)) h = g; // `decltype((a))`는 `int&`
+```
+
+```c++
+template <typename X, typename Y>
+auto add(X x, Y y) -> decltype(x + y) {
+  return x + y;
+}
+add(1, 2.0); // `decltype(x + y)` => `decltype(3.0)` => `double`
+```
+
+더 알아보기: [decltype(auto) - C++14](/CPP14.md#decltype(auto))
+
+---
+
 `decltype` is an operator which returns the _declared type_ of an expression passed to it. cv-qualifiers and references are maintained if they are part of the expression. Examples of `decltype`:
 
 ```c++
@@ -517,6 +544,21 @@ See also: [decltype(auto) - C++14](/CPP14.md#decltype(auto))
 
 ### Type aliases
 
+> 타입 별칭
+
+`typedef`를 사용하는 것과 의미상 유사하나, `using`을 사용한 타입 별칭은 가독성이 좋고 템플릿과 호환됩니다.
+
+```c++
+template <typename T>
+using Vec = std::vector<T>;
+Vec<int> v; // std::vector<int>
+
+using String = std::string;
+String s {"foo"};
+```
+
+---
+
 Semantically similar to using a `typedef` however, type aliases with `using` are easier to read and are compatible with templates.
 
 ```c++
@@ -530,6 +572,17 @@ String s {"foo"};
 
 ### nullptr
 
+C++11에서는 `NULL` 매크로를 대체하도록 설계된 null 포인터 타입을 도입했습니다. `nullptr`자체는 `std :: nullptr_t` 타입이며 암시적으로 포인터 유형으로 변환 될 수 있으며, `NULL`과 달리 `bool`을 제외한 정수 유형으로 변환 할 수 없습니다.
+
+```c++
+void foo(int);
+void foo(char*);
+foo(NULL); // 에러 -- 모호함
+foo(nullptr); // foo(char*) 호출
+```
+
+---
+
 C++11 introduces a new null pointer type designed to replace C's `NULL` macro. `nullptr` itself is of type `std::nullptr_t` and can be implicitly converted into pointer types, and unlike `NULL`, not convertible to integral types except `bool`.
 
 ```c++
@@ -540,6 +593,20 @@ foo(nullptr); // calls foo(char*)
 ```
 
 ### Strongly-typed enums
+
+> 강 타입 열거(enum)
+
+C 스타일의 enum의 문제를 해결한 타입 안전(type-safe)한 enum 타입: 암시적 형변환, 기본 타입을 지정할 수 없음, 범위 오염 등을 해결함
+
+```c++
+// `unsigned int`로 기본 타입을 지정함
+enum class Color : unsigned int { Red = 0xff0000, Green = 0xff00, Blue = 0xff };
+// `Alert`의 `Red`/`Green`은 `Color`와 충돌하지 않습니다.
+enum class Alert : bool { Red, Green };
+Color c = Color::Red;
+```
+
+---
 
 Type-safe enums that solve a variety of problems with C-style enums including: implicit conversions, inability to specify the underlying type, scope pollution.
 
@@ -552,6 +619,19 @@ Color c = Color::Red;
 ```
 
 ### Attributes
+
+> 속성
+
+`__attribute__(...)`, `__declspec`, 등에 대한 범용적인 구문을 제공합니다.
+
+```c++
+// `noreturn` 속성은 `f`가 반환하지 않음을 나타냅니다.
+[[ noreturn ]] void f() {
+  throw "error";
+}
+```
+
+---
 
 Attributes provide a universal syntax over `__attribute__(...)`, `__declspec`, etc.
 

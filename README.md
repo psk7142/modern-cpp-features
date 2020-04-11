@@ -117,7 +117,7 @@ C++11은 아래와 같은 새로운 언어 기능을 포함합니다.
 - [decltype](/CPP11.md#decltype)
 - [type aliases - 타입 별칭](/CPP11.md#type-aliases)
 - [nullptr](/CPP11.md#nullptr)
-- [strongly-typed enums - 강타입 enum](/CPP11.md#strongly-typed-enums)
+- [strongly-typed enums - 강 타입 열거](/CPP11.md#strongly-typed-enums)
 - [attributes - 속성](/CPP11.md#attributes)
 - [constexpr - 상수 표현식](/CPP11.md#constexpr)
 - [delegating constructors - 위임 생성자](/CPP11.md#delegating-constructors)

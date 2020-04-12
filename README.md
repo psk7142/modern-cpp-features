@@ -171,6 +171,7 @@ C++11은 아래와 같은 새로운 라이브러리 기능을 포함합니다:
 ## 작성자
 
 Anthony Calandra - [Original Repository](https://github.com/AnthonyCalandra/modern-cpp-features)
+박성규(0x0d5) - This Repository
 
 ## License
 

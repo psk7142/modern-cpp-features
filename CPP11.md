@@ -644,6 +644,51 @@ Attributes provide a universal syntax over `__attribute__(...)`, `__declspec`, e
 
 ### constexpr
 
+> 상수 표현식
+
+상수 표현식은 컴파일러에 의해 컴파일 시간에 계산된 표현식입니다. 오직 복잡하지 않은 계산만 수행할 수 있습니다. `constexpr` 지정자를 사용하여 변수, 함수 등이 상수 표현식임을 나타냅니다.
+
+```c++
+constexpr int square(int x) {
+  return x * x;
+}
+
+int square2(int x) {
+  return x * x;
+}
+
+int a = square(2);  // mov DWORD PTR [rbp-4], 4
+
+int b = square2(2); // mov edi, 2
+                    // call square2(int)
+                    // mov DWORD PTR [rbp-8], eax
+```
+
+`constexpr` 값은 컴파일러가 컴파일 시간에 계산할 수 있는 것입니다.
+
+```c++
+const int x = 123;
+constexpr const int& y = x; // 에러 -- constexpr 변수 `y`는 반드시 상수 표현식으로 초기화해야 합니다.
+```
+
+클래스에서 상수 표현식:
+
+```c++
+struct Complex {
+  constexpr Complex(double r, double i) : re{r}, im{i} { }
+  constexpr double real() { return re; }
+  constexpr double imag() { return im; }
+
+private:
+  double re;
+  double im;
+};
+
+constexpr Complex I(0, 1);
+```
+
+---
+
 Constant expressions are expressions evaluated by the compiler at compile-time. Only non-complex computations can be carried out in a constant expression. Use the `constexpr` specifier to indicate the variable, function, etc. is a constant expression.
 
 ```c++
@@ -687,6 +732,23 @@ constexpr Complex I(0, 1);
 
 ### Delegating constructors
 
+> 위임 생성자
+
+생성자는 이제 초기화자 목록(initializer list)를 사용하여 동일한 클래스의 다른 생성자를 호출할 수 있습니다.
+
+```c++
+struct Foo {
+  int foo;
+  Foo(int foo) : foo{foo} {}
+  Foo() : Foo(0) {}
+};
+
+Foo foo;
+foo.foo; // == 0
+```
+
+---
+
 Constructors can now call other constructors in the same class using an initializer list.
 
 ```c++
@@ -701,6 +763,33 @@ foo.foo; // == 0
 ```
 
 ### User-defined literals
+
+> 사용자 정의 리터럴
+
+사용자 정의 리터럴을 사용하면 언어를 확장하여 고유한 구문을 추가할 수 있습니다. 리터럴을 만들려면 `T`타입의 `T`를 반환하는 `T operator ""X (...) {...}` 함수를 정의해야 합니다. 이 함수의 이름이 리터럴의 이름을 정의합니다. 밑줄로 시작하지 않는 리터럴 이름은 예약되어 있으며 호출되지 않습니다. 리터럴이 호출하는 타입에 따라 사용자 정의 리터럴 함수가 허용해야 하는 매개 변수에 대한 규칙이 있습니다.
+
+섭씨를 화씨로 변환하는 예제:
+
+```c++
+// 정수 리터럴에 대한 `unsigned long long` 매개 변수가 필요함
+long long operator "" _celsius(unsigned long long tempCelsius) {
+  return std::llround(tempCelsius * 1.8 + 32);
+}
+24_celsius; // == 75
+```
+
+문자열을 정수형으로 변환하는 예제:
+
+```c++
+// `const char*`와 `std::size_t`가 매개 변수로 필요함
+int operator "" _int(const char* str, std::size_t) {
+  return std::stoi(str);
+}
+
+"123"_int; // == 123, `int` 타입
+```
+
+---
 
 User-defined literals allow you to extend the language and add your own syntax. To create a literal, define a `T operator "" X(...) { ... }` function that returns a type `T`, with a name `X`. Note that the name of this function defines the name of the literal. Any literal names not starting with an underscore are reserved and won't be invoked. There are rules on what parameters a user-defined literal function should accept, according to what type the literal is called on.
 

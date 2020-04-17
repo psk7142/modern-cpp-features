@@ -816,6 +816,25 @@ int operator "" _int(const char* str, std::size_t) {
 
 ### Explicit virtual overrides
 
+> 명시적인 가상 함수 재정의(주로 virtual 오버라이드라고 부릅니다.)
+
+다른 가상 함수(virtual function)에 대한 재정의(override)를 지정합니다. 만약 부모의 가상함수를 재정의하는 것이 아니라면 컴파일러 에러가 발생합니다.
+
+```c++
+struct A {
+  virtual void foo();
+  void bar();
+};
+
+struct B : A {
+  void foo() override; // 옳음 -- B::foo는 A::foo를 재정의
+  void bar() override; // 에러 -- A::bar는 가상이 아님
+  void baz() override; // 에러 -- B::baz는 A::baz를 재정의하는 것이 아님
+};
+```
+
+---
+
 Specifies that a virtual function overrides another virtual function. If the virtual function does not override a parent's virtual function, throws a compiler error.
 
 ```c++
@@ -832,6 +851,33 @@ struct B : A {
 ```
 
 ### Final specifier
+
+> final 지정자
+
+파생 클래스가 더 이상 가상 함수를 재정의 할 수 없도록 하거나, 상속 자체를 할 수 없도록 합니다.
+
+```c++
+struct A {
+  virtual void foo();
+};
+
+struct B : A {
+  virtual void foo() final;
+};
+
+struct C : B {
+  virtual void foo(); // 에러 -- 'foo'는 'final' 지정하여 재정의 불가
+};
+```
+
+클래스를 상속할 수 없도록 하는 예:
+
+```c++
+struct A final {};
+struct B : A {}; // 에러 -- 'A'는 'final'로 지정하여 상속 불가
+```
+
+---
 
 Specifies that a virtual function cannot be overridden in a derived class or that a class cannot be inherited from.
 
@@ -857,6 +903,38 @@ struct B : A {}; // error -- base 'A' is marked 'final'
 ```
 
 ### Default functions
+
+> 기본 함수(주로 생성자/소멸자 defualt로 부릅니다.)
+
+생성자와 소멸자의 기본 구현을 제공하는 보다 우아하고 효율적인 방법입니다.
+
+```c++
+struct A {
+  A() = default;
+  A(int x) : x{x} {}
+  int x {1};
+};
+A a; // a.x == 1
+A a2 {123}; // a.x == 123
+```
+
+상속을 포함한 예:
+
+```c++
+struct B {
+  B() : x{1} {}
+  int x;
+};
+
+struct C : B {
+  // B::B도 호출
+  C() = default;
+};
+
+C c; // c.x == 1
+```
+
+---
 
 A more elegant, efficient way to provide a default implementation of a function, such as a constructor.
 
@@ -888,6 +966,27 @@ C c; // c.x == 1
 
 ### Deleted functions
 
+> 삭제 함수(주로 생성자/소멸자 delete라고 부릅니다.)
+
+생성자와 소멸자의 삭제 구현을 제공하는 보다 우아하고 효율적인 방법입니다. 객체의 복사를 방지하는 데 유용합니다.
+
+```c++
+class A {
+  int x;
+
+public:
+  A(int x) : x{x} {};
+  A(const A&) = delete;
+  A& operator=(const A&) = delete;
+};
+
+A x {123};
+A y = x; // 에러 -- 삭제된 복사 생성자를 호출
+y = x; // 에러 -- operator= 가 삭제됨
+```
+
+---
+
 A more elegant, efficient way to provide a deleted implementation of a function. Useful for preventing copies on objects.
 
 ```c++
@@ -906,6 +1005,26 @@ y = x; // error -- operator= deleted
 ```
 
 ### Range-based for loops
+
+> 범위 기반 for 문
+
+컨테이너의 요소(container's elements)를 순회하는 구문입니다.
+
+```c++
+std::array<int, 5> a {1, 2, 3, 4, 5};
+for (int& x : a) x *= 2;
+// a == { 2, 4, 6, 8, 10 }
+```
+
+`int &`와 `int`를 사용할 때의 차이점에 유의하십시오.
+
+```c++
+std::array<int, 5> a {1, 2, 3, 4, 5};
+for (int x : a) x *= 2;
+// a == { 1, 2, 3, 4, 5 }
+```
+
+---
 
 Syntactic sugar for iterating over a container's elements.
 

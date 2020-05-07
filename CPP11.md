@@ -1044,6 +1044,35 @@ for (int x : a) x *= 2;
 
 ### Special member functions for move semantics
 
+> 이동(move) semantic에 대한 특별한 멤버 함수들
+
+복사 생성자와 복사 할당 연산자는 복사(Copy)를 수행 할 때 호출되며, `C++11`의 이동 semantic을 도입하여 이동 생성자와 이동 할당 연산자를 만들 수 있습니다.
+
+```c++
+struct A {
+  std::string s;
+  A() : s{"test"} {}
+  A(const A& o) : s{o.s} {}
+  A(A&& o) : s{std::move(o.s)} {}
+  A& operator=(A&& o) {
+   s = std::move(o.s);
+   return *this;
+  }
+};
+
+A f(A a) {
+  return a;
+}
+
+A a1 = f(A{}); // 임시 rvalue로부터 이동 생성됨
+A a2 = std::move(a1); // std::move를 사용한 이동 생성
+A a3 = A{};
+a2 = std::move(a3); // std::move를 사용한 이동 할당
+a1 = f(A{}); //임시 rvalue로부터 이동 할당
+```
+
+---
+
 The copy constructor and copy assignment operator are called when copies are made, and with C++11's introduction of move semantics, there is now a move constructor and move assignment operator for moves.
 
 ```c++
